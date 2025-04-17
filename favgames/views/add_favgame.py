@@ -9,7 +9,7 @@ from favgames.models import Platform, FavGame
 from favgames.serializers.create_favgame_serializer import CreateFavGameSerializer
 from users.models import CustomUser
 
-class CreateFavGameView(APIView):
+class AddFavGameView(APIView):
     permission_classes = [AllowAny,]
 
     def post(self, request, slug):
