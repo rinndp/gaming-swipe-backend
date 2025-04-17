@@ -1,0 +1,1 @@
+from .favgame_admin import *
