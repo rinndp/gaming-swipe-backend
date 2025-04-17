@@ -4,6 +4,8 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UN
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from users.models import CustomUser
+from users.serializers import RegisterUserSerializer
+
 
 class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -41,18 +43,11 @@ class RegisterView(APIView):
         email = data.get('email')
         password = data.get('password')
 
-        if name is None:
-            return Response({"error": 'Name is required'}, status=HTTP_400_BAD_REQUEST)
-
-        if last_name is None:
-            return Response({"error": 'Last name is required'}, status=HTTP_400_BAD_REQUEST)
-
-        try:
+        serializer = RegisterUserSerializer(data=data)
+        if serializer.is_valid():
             CustomUser.objects.create_user(email=email, password=password, name=name, last_name=last_name)
-        except Exception as e:
-            return Response({"error": str(e)}, status=HTTP_400_BAD_REQUEST)
-
-        return Response({"message": "User created successfully"}, status=HTTP_200_OK)
+            return Response({"message": "User created successfully"}, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 

@@ -9,26 +9,27 @@ from users.models import CustomUser
 class DeleteFavGameView(APIView):
     permission_classes = (AllowAny,)
 
-    def delete(self, request, slug):
+    def delete(self, request, slug, position):
         data = request.data
-        id = data.get('id')
 
         try:
-            user = User.objects.get(slug=slug)
+            user = CustomUser.objects.get(slug=slug)
         except CustomUser.DoesNotExist:
             return Response({
                 "error": f"User not found with slug: {slug}"},
                 status=HTTP_400_BAD_REQUEST)
 
         try:
-            favgame = FavGame.objects.get(id=id)
-        except FavGame.DoesNotExist:
+            favgame = user.favorite_games.all()[position]
+            print(favgame)
+        except IndexError:
             return Response({
-                "error": f"FavGame not found with id: {id}"},
+                "error": f"FavGame not found with position: {position}"},
                 status=HTTP_400_BAD_REQUEST)
+
 
         if user.favorite_games.filter(id=favgame.id).exists():
             user.favorite_games.remove(favgame)
-            return Response({"message": "FavGame deleted correctly"}, status=HTTP_200_OK)
+            return Response({"message": "Game deleted correctly"}, status=HTTP_200_OK)
         else:
             return Response({"error": "FavGame not in user's favorite games list"}, status=HTTP_400_BAD_REQUEST)
