@@ -3,11 +3,12 @@ from rest_framework.authtoken.admin import User
 
 from users.models import CustomUser
 
-
 class UserSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ('name', 'last_name', 'email', 'image')
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +31,6 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Password must be at least 8 characters long')
 
         return data
+
+
+
