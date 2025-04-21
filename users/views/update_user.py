@@ -16,7 +16,9 @@ class UpdateUserView(APIView):
         data = request.data
         name = data.get("name")
         last_name = data.get("last_name")
-        image = data.get("image")
+        image = request.FILES.get("image")
+        print("FILES:", request.FILES)
+        print(image)
 
         user = get_object_or_404(CustomUser, slug=slug)
 
