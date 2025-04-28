@@ -33,4 +33,3 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         return data
 
 
-
