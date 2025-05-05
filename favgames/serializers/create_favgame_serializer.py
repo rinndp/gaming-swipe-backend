@@ -25,7 +25,7 @@ class CreateFavGameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FavGame
-        fields = ('name', 'rating_score', 'release_year', 'image_url', 'platforms', 'genres',)
+        fields = ('name', 'rating_score', 'release_year', 'image_url', 'platforms', 'genres', 'id_api')
 
     def validate (self, data):
         name = data.get('name')

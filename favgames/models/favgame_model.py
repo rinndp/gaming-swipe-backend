@@ -11,6 +11,7 @@ class FavGame(models.Model):
     image_url = models.URLField(null=True, blank=True, default="", verbose_name="URL de imagen")
     platforms = models.ManyToManyField(Platform, related_name="favgames", default=[], blank=True, verbose_name="Platformas")
     genres = models.ManyToManyField(Genre, related_name="favgames", default=[], blank=True, verbose_name="Genres")
+    id_api = models.IntegerField(null=False, blank=False, default=0, verbose_name="ID API")
 
     class Meta:
         db_table = "favgames"

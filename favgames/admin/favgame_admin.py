@@ -6,7 +6,7 @@ from favgames.models import FavGame, Platform, Genre
 class FavGameAdmin(admin.ModelAdmin):
     list_display = ("id", 'name', 'rating_score')
     search_fields = ('name',)
-
+    readonly_fields = ('id_api',)
     list_filter = ('platforms',)
 
 admin.site.register(FavGame, FavGameAdmin)
