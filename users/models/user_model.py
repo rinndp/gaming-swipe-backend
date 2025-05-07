@@ -45,6 +45,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=50, null=False, blank=False, verbose_name="Apellido")
     email = models.EmailField(max_length=255, null=False, blank=False, unique=True, verbose_name="Email")
     favorite_games = models.ManyToManyField(FavGame, related_name="favorited_by", blank=True)
+    played_games = models.ManyToManyField(FavGame, related_name="played_by", blank=True)
     image = models.ImageField(upload_to="profile_images", null=True, blank=True, verbose_name="Imagen")
     slug = models.SlugField(max_length=155, null=True, blank=True, unique=True, verbose_name="Slug")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creacion")
