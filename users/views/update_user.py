@@ -1,3 +1,5 @@
+import os
+
 from django.views.generic import UpdateView
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
@@ -27,6 +29,10 @@ class UpdateUserView(APIView):
         if last_name is not None:
             user.last_name = last_name
         if image is not None:
+            if user.image and hasattr(user.image, 'path'):
+                old_image_path = user.image.path
+                if os.path.isfile(old_image_path):
+                    os.remove(old_image_path)
             user.image = image
 
         user.save()

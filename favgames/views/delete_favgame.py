@@ -9,7 +9,7 @@ from users.models import CustomUser
 class DeleteFavGameView(APIView):
     permission_classes = (AllowAny,)
 
-    def delete(self, request, slug, position):
+    def delete(self, request, slug, id_api):
         try:
             user = CustomUser.objects.get(slug=slug)
         except CustomUser.DoesNotExist:
@@ -18,11 +18,11 @@ class DeleteFavGameView(APIView):
                 status=HTTP_400_BAD_REQUEST)
 
         try:
-            favgame = user.favorite_games.all()[position]
+            favgame = FavGame.objects.get(id_api=id_api)
             print(favgame)
         except IndexError:
             return Response({
-                "error": f"Game not found with position: {position}"},
+                "error": f"Game not found with id_api: {id_api}"},
                 status=HTTP_400_BAD_REQUEST)
 
 
@@ -35,7 +35,7 @@ class DeleteFavGameView(APIView):
 class DeletePlayedGameView(APIView):
     permission_classes = (AllowAny,)
 
-    def delete(self, request, slug, position):
+    def delete(self, request, slug, id_api):
         try:
             user = CustomUser.objects.get(slug=slug)
         except CustomUser.DoesNotExist:
@@ -44,11 +44,11 @@ class DeletePlayedGameView(APIView):
                 status=HTTP_400_BAD_REQUEST)
 
         try:
-            favgame = user.played_games.all()[position]
+            favgame = FavGame.objects.get(id_api=id_api)
             print(favgame)
         except IndexError:
             return Response({
-                "error": f"Game not found with position: {position}"},
+                "error": f"Game not found with id_api: {id_api}"},
                 status=HTTP_400_BAD_REQUEST)
 
         if user.played_games.filter(id=favgame.id).exists():

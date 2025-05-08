@@ -72,6 +72,6 @@ class AddPlayedGameView(APIView):
         user.played_games.add(fav_game)
         user.favorite_games.remove(fav_game)
         return Response(
-            {"message": "Game added to 'played list'"},
+            {"message": "Game added correctly"},
             status=HTTP_200_OK
         )
