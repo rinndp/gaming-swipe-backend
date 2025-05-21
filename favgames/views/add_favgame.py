@@ -10,7 +10,7 @@ from favgames.serializers.create_favgame_serializer import CreateFavGameSerializ
 from users.models import CustomUser
 
 class AddFavGameView(APIView):
-    permission_classes = [AllowAny,]
+    permission_classes = [IsAuthenticated,]
 
     def post(self, request, slug):
         data = request.data
@@ -54,7 +54,7 @@ class AddFavGameView(APIView):
             )
 
 class AddPlayedGameView(APIView):
-    permission_classes = [AllowAny,]
+    permission_classes = [IsAuthenticated,]
 
     def post(self, request, slug):
         data = request.data

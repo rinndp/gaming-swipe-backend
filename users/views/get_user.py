@@ -9,7 +9,7 @@ from users.serializers import UserSerializer
 
 
 class GetUserView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, slug):
         try:

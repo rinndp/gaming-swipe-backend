@@ -12,7 +12,7 @@ from users.models import CustomUser
 
 
 class UpdateUserView(APIView):
-    permission_classes = [AllowAny,]
+    permission_classes = [IsAuthenticated,]
 
     def post(self, request, slug):
         data = request.data
@@ -39,7 +39,7 @@ class UpdateUserView(APIView):
         return Response({"message":"User updated correctly"}, status=HTTP_200_OK)
 
 class UpdatePasswordView (APIView):
-    permission_classes = [AllowAny,]
+    permission_classes = [IsAuthenticated,]
 
     def post(self, request, slug):
         data = request.data

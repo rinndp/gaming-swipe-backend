@@ -7,7 +7,7 @@ from favgames.serializers.get_favgames_serializer import GetFavgamesSerializer
 from users.models import CustomUser
 
 class GetFavGamesFromUser(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, slug):
         try:
@@ -21,7 +21,7 @@ class GetFavGamesFromUser(APIView):
 
 
 class GetPlayedGamesFromUser(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, slug):
         try:

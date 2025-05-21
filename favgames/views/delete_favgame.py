@@ -7,7 +7,7 @@ from favgames.models import FavGame
 from users.models import CustomUser
 
 class DeleteFavGameView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def delete(self, request, slug, id_api):
         try:
@@ -33,7 +33,7 @@ class DeleteFavGameView(APIView):
             return Response({"error": "Game not in user's favorite games list"}, status=HTTP_400_BAD_REQUEST)
 
 class DeletePlayedGameView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def delete(self, request, slug, id_api):
         try:
