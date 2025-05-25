@@ -3,12 +3,19 @@ from rest_framework.authtoken.admin import User
 
 from users.models import CustomUser
 
+class SearchUserSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ('name', 'last_name', 'image', 'slug',)
+
 class UserSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)
 
     class Meta:
         model = CustomUser
-        fields = ('name', 'last_name', 'email', 'image')
+        fields = ('name', 'last_name', 'email', 'image',)
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
