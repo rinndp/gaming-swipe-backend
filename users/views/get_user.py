@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.views import View
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -33,7 +34,9 @@ class SearchUserView(APIView):
             return Response({}, status=HTTP_200_OK)
 
         if last_name is None:
-            users = CustomUser.objects.filter(name__icontains=name)
+            users = CustomUser.objects.filter(
+                Q(name__icontains=name) | Q(last_name__icontains=name)
+            )
         else:
             users = CustomUser.objects.filter(name__icontains=name, last_name__icontains=last_name)
 
