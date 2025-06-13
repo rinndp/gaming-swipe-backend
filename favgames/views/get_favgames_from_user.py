@@ -15,7 +15,7 @@ class GetFavGamesFromUser(APIView):
         except CustomUser.DoesNotExist:
             return Response({"error":f"User not found with slug: {slug}"},status=HTTP_400_BAD_REQUEST)
 
-        favgames = FavGame.objects.filter(favorited_by=user).all()
+        favgames = FavGame.objects.filter(favorited_by=user).all().order_by('name')
         serializer = GetFavgamesSerializer(favgames, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
 
@@ -29,7 +29,7 @@ class GetPlayedGamesFromUser(APIView):
         except CustomUser.DoesNotExist:
             return Response({"error":f"User not found with slug: {slug}"},status=HTTP_400_BAD_REQUEST)
 
-        favgames = FavGame.objects.filter(played_by=user).all()
+        favgames = FavGame.objects.filter(played_by=user).all().order_by("name")
         serializer = GetFavgamesSerializer(favgames, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
 

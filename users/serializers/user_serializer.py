@@ -34,6 +34,12 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         if last_name is None:
             raise serializers.ValidationError('Users must have a last name')
 
+        if len(name) > 15:
+            raise serializers.ValidationError('Name cannot be longer than 20 characters')
+
+        if len(last_name) > 15:
+            raise serializers.ValidationError('Last name cannot be longer than 20 characters')
+
         if len(password) < 8:
             raise serializers.ValidationError('Password must be at least 8 characters long')
 

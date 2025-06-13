@@ -1,13 +1,12 @@
 import os
 
 from django.views.generic import UpdateView
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-
 from users.models import CustomUser
 
 
@@ -25,9 +24,15 @@ class UpdateUserView(APIView):
         user = get_object_or_404(CustomUser, slug=slug)
 
         if name is not None:
-            user.name = name
+            if len(name) > 15:
+                raise serializers.ValidationError("Name cannot be longer than 15 characters")
+            else:
+                user.name = name
         if last_name is not None:
-            user.last_name = last_name
+            if len(last_name) > 15:
+                raise serializers.ValidationError("Last name cannot be longer than 15 characters")
+            else:
+                user.last_name = last_name
         if image is not None:
             if user.image and hasattr(user.image, 'path'):
                 old_image_path = user.image.path
