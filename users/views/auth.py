@@ -43,6 +43,9 @@ class RegisterView(APIView):
         password = data.get('password')
 
         serializer = RegisterUserSerializer(data=data)
+        if CustomUser.objects.filter(email=email).exists():
+            return Response({"error": "Email already registered"}, status=HTTP_400_BAD_REQUEST)
+
         if serializer.is_valid():
             CustomUser.objects.create_user(email=email, password=password, name=name, last_name=last_name)
             return Response({"message": "User created successfully"}, status=HTTP_200_OK)
