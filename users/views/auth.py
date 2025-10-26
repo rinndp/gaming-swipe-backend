@@ -26,6 +26,7 @@ class LoginView(APIView):
                 return Response({
                     "slug": user.slug,
                     "access_token": str(access_token),
+                    "refresh_token": str(refresh),
                 }, status=HTTP_200_OK)
             else:
                 return Response({"error": 'Invalid password'}, status=HTTP_401_UNAUTHORIZED)

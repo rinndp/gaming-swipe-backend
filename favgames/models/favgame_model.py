@@ -5,7 +5,7 @@ from favgames.models.platform_model import Platform
 
 
 class FavGame(models.Model):
-    name = models.CharField(null=False, blank=False, unique=True, verbose_name="Nombre")
+    name = models.CharField(null=False, blank=False, unique=False, verbose_name="Nombre")
     rating_score = models.FloatField(null=True, blank=True, default=0, verbose_name="Nota")
     release_year = models.IntegerField(null=True, blank=True, default=0, verbose_name="Año lanzamiento")
     image_url = models.URLField(null=True, blank=True, default="", verbose_name="URL de imagen")
