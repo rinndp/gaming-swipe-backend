@@ -27,18 +27,13 @@ class SearchUserView(APIView):
 
     def post(self, request):
         data = request.data
-        name = data.get('name')
-        last_name = data.get('last_name')
+        username = data.get('username')
 
-        if name is None and last_name is None:
+        if username is None:
             return Response({}, status=HTTP_200_OK)
 
-        if last_name is None:
-            users = CustomUser.objects.filter(
-                Q(name__icontains=name) | Q(last_name__icontains=name)
-            )
-        else:
-            users = CustomUser.objects.filter(name__icontains=name, last_name__icontains=last_name)
+
+        users = CustomUser.objects.filter(username__icontains=username)
 
         serializer = SearchUserSerializer(users, many=True)
         return Response(serializer.data, status=HTTP_200_OK)

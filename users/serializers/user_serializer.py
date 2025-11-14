@@ -8,37 +8,30 @@ class SearchUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('name', 'last_name', 'image', 'slug',)
+        fields = ('username', 'image', 'slug',)
 
 class UserSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)
 
     class Meta:
         model = CustomUser
-        fields = ('name', 'last_name', 'email', 'image',)
+        fields = ('username', 'email', 'image',)
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('name', 'last_name', 'email', 'password')
+        fields = ('username', 'email', 'password')
 
     def validate (self, data):
-        name = data.get('name')
-        last_name = data.get('last_name')
+        name = data.get('username')
         email = data.get('email')
         password = data.get('password')
 
         if name is None:
             raise serializers.ValidationError('Users must have a name')
 
-        if last_name is None:
-            raise serializers.ValidationError('Users must have a last name')
-
-        if len(name) > 15:
+        if len(name) > 20:
             raise serializers.ValidationError('Name cannot be longer than 20 characters')
-
-        if len(last_name) > 15:
-            raise serializers.ValidationError('Last name cannot be longer than 20 characters')
 
         if len(password) < 8:
             raise serializers.ValidationError('Password must be at least 8 characters long')

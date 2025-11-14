@@ -38,8 +38,7 @@ class RegisterView(APIView):
 
     def post(self, request):
         data = request.data
-        name = data.get('name')
-        last_name = data.get('last_name')
+        username = data.get('username')
         email = data.get('email')
         password = data.get('password')
 
@@ -48,7 +47,7 @@ class RegisterView(APIView):
             return Response({"error": "Email already registered"}, status=HTTP_400_BAD_REQUEST)
 
         if serializer.is_valid():
-            CustomUser.objects.create_user(email=email, password=password, name=name, last_name=last_name)
+            CustomUser.objects.create_user(email=email, password=password, username=username)
             return Response({"message": "User created successfully"}, status=HTTP_200_OK)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 

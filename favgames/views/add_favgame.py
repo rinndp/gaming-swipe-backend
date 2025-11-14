@@ -1,5 +1,3 @@
-from django.views.generic import CreateView
-from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED
@@ -40,18 +38,22 @@ class AddFavGameView(APIView):
 
         else:
             fav_game = FavGame.objects.get(id_api=id_api)
+            serializer = CreateFavGameSerializer(fav_game, data=request.data, partial=True)
 
-            if fav_game in user.favorite_games.all():
+            if serializer.is_valid():
+                fav_game = serializer.save()
+
+                if fav_game in user.favorite_games.all():
+                    return Response(
+                        {"message": f"This game is already in your favorite game"},
+                        status=HTTP_200_OK
+                    )
+
+                user.favorite_games.add(fav_game)
                 return Response(
-                    {"message": f"This game is already in your favorite game"},
+                    {"message": "FavGame created correctly"},
                     status=HTTP_200_OK
                 )
-
-            user.favorite_games.add(fav_game)
-            return Response(
-                {"message": "FavGame created correctly"},
-                status=HTTP_200_OK
-            )
 
 class AddPlayedGameView(APIView):
     permission_classes = [IsAuthenticated,]

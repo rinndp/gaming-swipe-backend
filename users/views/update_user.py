@@ -15,24 +15,18 @@ class UpdateUserView(APIView):
 
     def post(self, request, slug):
         data = request.data
-        name = data.get("name")
-        last_name = data.get("last_name")
+        username = data.get("username")
         image = request.FILES.get("image")
         print("FILES:", request.FILES)
         print(image)
 
         user = get_object_or_404(CustomUser, slug=slug)
 
-        if name is not None:
-            if len(name) > 15:
+        if username is not None:
+            if len(username) > 15:
                 raise serializers.ValidationError("Name cannot be longer than 15 characters")
             else:
-                user.name = name
-        if last_name is not None:
-            if len(last_name) > 15:
-                raise serializers.ValidationError("Last name cannot be longer than 15 characters")
-            else:
-                user.last_name = last_name
+                user.username = username
         if image is not None:
             if user.image and hasattr(user.image, 'path'):
                 old_image_path = user.image.path
