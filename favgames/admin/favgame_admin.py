@@ -13,8 +13,9 @@ admin.site.register(FavGame, FavGameAdmin)
 
 
 class PlatformAdmin(admin.ModelAdmin):
-    list_display = ("id", 'abbreviation',)
-    search_fields = ('abbreviation',)
+    list_display = ("id", 'abbreviation', 'name',)
+    search_fields = ('abbreviation', 'name',)
+    readonly_fields = ('abbreviation', 'name')
 
 admin.site.register(Platform, PlatformAdmin)
 

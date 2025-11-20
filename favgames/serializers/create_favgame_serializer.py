@@ -6,11 +6,14 @@ from favgames.models import FavGame, Platform, Genre
 
 
 class PlatformSerializer(serializers.ModelSerializer):
+    abbreviation = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = Platform
-        fields = ('abbreviation',)
+        fields = ('abbreviation', 'name',)
         extra_kwargs = {
-            'abbreviation': {'validators': []}
+            'abbreviation': {'validators': []},
+            'name': {'validators': []}
         }
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -24,7 +27,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class CreateFavGameSerializer(serializers.ModelSerializer):
     platforms = PlatformSerializer(many=True)
     genres = GenreSerializer(many=True)
-    release_date = serializers.IntegerField(write_only=True)
+    release_date = serializers.IntegerField(write_only=True, required=False, allow_null=True)
 
     class Meta:
         model = FavGame
@@ -58,7 +61,7 @@ class CreateFavGameSerializer(serializers.ModelSerializer):
             fav_game.genres.add(genre)
 
         for platform in platforms_data:
-            platform, _ = Platform.objects.get_or_create(abbreviation=platform['abbreviation'])
+            platform, _ = Platform.objects.get_or_create(abbreviation=platform.get("abbreviation"), name=platform.get("name"))
             fav_game.platforms.add(platform)
 
         return fav_game
@@ -67,12 +70,10 @@ class CreateFavGameSerializer(serializers.ModelSerializer):
         genres_data = validated_data.pop('genres', [])
         platforms_data = validated_data.pop('platforms', [])
 
-        # Actualizar campos simples
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        # Actualizar relaciones many-to-many
         if genres_data:
             instance.genres.clear()
             for genre in genres_data:
@@ -82,7 +83,18 @@ class CreateFavGameSerializer(serializers.ModelSerializer):
         if platforms_data:
             instance.platforms.clear()
             for platform in platforms_data:
-                platform, _ = Platform.objects.get_or_create(abbreviation=platform['abbreviation'])
-                instance.platforms.add(platform)
+                abbrev = (platform.get("abbreviation") or "").strip() or None
+                name = (platform.get("name") or "").strip() or None
+
+                platform_obj, created = Platform.objects.get_or_create(
+                    abbreviation=abbrev,
+                    defaults={'name': name},
+                )
+
+                if not created and name and not platform_obj.name:
+                    platform_obj.name = name
+                    platform_obj.save()
+
+                instance.platforms.add(platform_obj)
 
         return instance
