@@ -12,8 +12,6 @@ class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
-        if not password:
-            raise ValueError('Users must have a password')
         try:
             valid = validate(email)
             email = valid.normalized
@@ -23,11 +21,12 @@ class CustomUserManager(BaseUserManager):
         if CustomUser.objects.filter(email=email).exists():
             raise ValueError('Email already registered.')
 
-        if len(password) < 8:
+        if password and len(password) < 8:
             raise ValueError("Password must be at least 8 characters long")
 
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        if password:
+            user.set_password(password)
         user.save(using=self._db)
         return user
 
@@ -75,5 +74,5 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.email} - {self.name}"
+        return f"{self.email} - {self.username}"
 

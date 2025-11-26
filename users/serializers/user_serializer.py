@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'image',)
 
 class RegisterUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(required=False, allow_blank=True, write_only=True)
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'password')
@@ -33,7 +34,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         if len(name) > 20:
             raise serializers.ValidationError('Name cannot be longer than 20 characters')
 
-        if len(password) < 8:
+        if password and len(password) < 8:
             raise serializers.ValidationError('Password must be at least 8 characters long')
 
 
