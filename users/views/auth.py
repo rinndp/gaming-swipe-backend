@@ -14,9 +14,23 @@ class LoginView(APIView):
         data = request.data
         email = data.get('email')
         password = data.get('password')
+        google_id= data.get('google_id')
 
-        if email is None or password is None:
-            return Response({"error": 'Email and password are required'}, status=HTTP_401_UNAUTHORIZED)
+        if email is None:
+            return Response({"error": 'Email is required'}, status=HTTP_401_UNAUTHORIZED)
+
+        if google_id and password is None:
+            try:
+                user = CustomUser.objects.get(email=email, google_id=google_id)
+                refresh = RefreshToken.for_user(user)
+                access_token = refresh.access_token
+                return Response({
+                    "slug": user.slug,
+                    "access_token": str(access_token),
+                    "refresh_token": str(refresh),
+                }, status=HTTP_200_OK)
+            except CustomUser.DoesNotExist:
+                return Response({"error": 'User does not exist with google_id: '+google_id}, status=HTTP_400_BAD_REQUEST)
 
         try:
             user = CustomUser.objects.get(email=email)
@@ -41,13 +55,14 @@ class RegisterView(APIView):
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
+        google_id = data.get('google_id')
 
         serializer = RegisterUserSerializer(data=data)
         if CustomUser.objects.filter(email=email).exists():
             return Response({"error": "Email already registered"}, status=HTTP_400_BAD_REQUEST)
 
         if serializer.is_valid():
-            CustomUser.objects.create_user(email=email, password=password, username=username)
+            CustomUser.objects.create_user(email=email, password=password, username=username, google_id=google_id)
             return Response({"message": "User created successfully"}, status=HTTP_200_OK)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 

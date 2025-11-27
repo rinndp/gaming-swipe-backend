@@ -40,7 +40,8 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=20, null=False, blank=False, verbose_name=" Username")
+    username = models.CharField(max_length=20, null=False, blank=False, verbose_name="Username")
+    google_id = models.CharField(max_length=70, null=True, blank=True, verbose_name="Google ID")
     email = models.EmailField(max_length=255, null=False, blank=False, unique=True, verbose_name="Email")
     favorite_games = models.ManyToManyField(FavGame, related_name="favorited_by", blank=True)
     played_games = models.ManyToManyField(FavGame, related_name="played_by", blank=True)
