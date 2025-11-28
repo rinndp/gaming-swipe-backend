@@ -1,4 +1,5 @@
 import secrets
+import uuid
 
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
@@ -46,7 +47,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     favorite_games = models.ManyToManyField(FavGame, related_name="favorited_by", blank=True)
     played_games = models.ManyToManyField(FavGame, related_name="played_by", blank=True)
     image = models.ImageField(upload_to="profile_images", null=True, blank=True, verbose_name="Profile image")
-    slug = models.SlugField(max_length=155, null=True, blank=True, unique=True, verbose_name="Slug")
+    slug = models.UUIDField(default=uuid.uuid4, unique=True, verbose_name="Slug")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
 
@@ -64,15 +65,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         db_table = 'users'
         verbose_name = "User"
         verbose_name_plural = "Users"
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            slug = secrets.token_urlsafe(16)
-            while CustomUser.objects.filter(slug=slug).exists():
-                slug = secrets.token_urlsafe(16)
-
-            self.slug = slug
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.email} - {self.username}"

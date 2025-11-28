@@ -7,7 +7,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('email', 'username', 'updated_at', 'is_superuser', 'is_staff', 'is_active', 'last_login',)
     list_filter = ("is_superuser", "is_active", "is_staff")
     list_editable = ('is_staff', 'is_superuser', 'is_active',)
-    readonly_fields = ('email', 'username', 'slug',)
+    readonly_fields = ('email', 'username', 'slug', 'password', 'updated_at', 'last_login', 'google_id', 'favorite_games', 'played_games',)
     search_fields = ("email","username",)
     ordering = ('-updated_at',)
 

@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from rest_framework.views import APIView
@@ -66,6 +67,19 @@ class RegisterView(APIView):
             return Response({"message": "User created successfully"}, status=HTTP_200_OK)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
+class CheckIfEmailIsAlreadyRegistered(APIView):
+    permissions_classes = (AllowAny,)
 
+    def post(self, request):
+        data = request.data
+        email = data.get('email')
+
+        if email is None:
+            return Response({"error": "Email is required"}, status=HTTP_400_BAD_REQUEST)
+
+        if CustomUser.objects.filter(email=email).exists():
+            return Response({"error": "Email already registered"}, status=HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Email not registered"}, status=HTTP_200_OK)
 
 
