@@ -36,8 +36,8 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         if password is None and google_id is None:
             raise serializers.ValidationError('User logged with Google must have a google_id')
 
-        if len(name) > 20:
-            raise serializers.ValidationError('Name cannot be longer than 20 characters')
+        if len(name) > 30:
+            raise serializers.ValidationError('Name cannot be longer than 30 characters')
 
         if password and len(password) < 8:
             raise serializers.ValidationError('Password must be at least 8 characters long')

@@ -17,14 +17,14 @@ class UpdateUserView(APIView):
         data = request.data
         username = data.get("username")
         image = request.FILES.get("image")
-        print("FILES:", request.FILES)
-        print(image)
 
         user = get_object_or_404(CustomUser, slug=slug)
 
         if username is not None:
-            if len(username) > 15:
-                raise serializers.ValidationError("Name cannot be longer than 15 characters")
+            if len(username) > 30:
+                return Response({"error": "Username cannot be longer than 30 characters"}, status=HTTP_400_BAD_REQUEST)
+            if CustomUser.objects.filter(username=username).exists():
+                return Response({"error": "Username already registered"}, status=HTTP_400_BAD_REQUEST)
             else:
                 user.username = username
         if image is not None:

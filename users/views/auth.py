@@ -82,4 +82,19 @@ class CheckIfEmailIsAlreadyRegistered(APIView):
 
         return Response({"message": "Email not registered"}, status=HTTP_200_OK)
 
+class CheckIfUsernameIsAlreadyRegistered(APIView):
+    permissions_classes = (AllowAny,)
+
+    def post(self, request):
+        data = request.data
+        username = data.get('username')
+
+        if username is None:
+            return Response({"error": "Username is required"}, status=HTTP_400_BAD_REQUEST)
+
+        if CustomUser.objects.filter(username=username).exists():
+            return Response({"error": "Username already registered"}, status=HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Username not registered"}, status=HTTP_200_OK)
+
 
