@@ -27,11 +27,15 @@ class UpdateUserView(APIView):
                 return Response({"error": "Username already registered"}, status=HTTP_400_BAD_REQUEST)
             else:
                 user.username = username
+
         if image is not None:
-            if user.image and hasattr(user.image, 'path'):
-                old_image_path = user.image.path
-                if os.path.isfile(old_image_path):
-                    os.remove(old_image_path)
+            if user.image:
+                try:
+                    import cloudinary.uploader
+                    public_id = user.image.name.rsplit('.', 1)[0]
+                    cloudinary.uploader.destroy(public_id)
+                except Exception as e:
+                    pass
             user.image = image
 
         user.save()
