@@ -1,6 +1,4 @@
 from django.contrib import admin
-from rest_framework.authtoken.admin import User
-
 from users.models import CustomUser
 
 class CustomUserAdmin(admin.ModelAdmin):
