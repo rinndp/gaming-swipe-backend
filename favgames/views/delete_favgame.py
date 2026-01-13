@@ -1,4 +1,3 @@
-from rest_framework.authtoken.admin import User
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
