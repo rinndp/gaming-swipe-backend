@@ -1,0 +1,27 @@
+databases:
+  - name: gaming_swipe_db
+    databaseName: gaming_swipe_db
+    user: gaming_swipe_db_user
+    plan: free
+
+services:
+  - type: web
+    name: gaming-swipe-backend
+    env: python
+    plan: free
+    region: frankfurt
+    branch: master
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn GamingSwipe.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gaming_swipe_db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
