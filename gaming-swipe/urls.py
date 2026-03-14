@@ -18,11 +18,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-
-import users
+from .views import GetIGDBTokenView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("api/igdb/token", GetIGDBTokenView.as_view(), name="get-igdb-token"),
     path("api/", include("users.urls")),
     path("api/", include("favgames.urls")),
 ]
